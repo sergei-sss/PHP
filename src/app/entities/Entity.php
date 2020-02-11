@@ -3,7 +3,6 @@
 namespace Entity;
 
 use PDO;
-use ReflectionObject;
 
 abstract class Entity implements IEntities
 {
@@ -13,7 +12,7 @@ abstract class Entity implements IEntities
 
     /**
      * Entity constructor.
-     * @param PDO|null   $pdo
+     * @param PDO|null $pdo
      */
     public function __construct(?PDO $pdo = null)
     {
@@ -24,15 +23,6 @@ abstract class Entity implements IEntities
     {
         return boolval($this->id);
     }
-
-    // /**
-    //  * @return array
-    //  */
-    // public function fetchArray(): array
-    // TODO {
-    //     $self = new ReflectionObject($this);
-    //     $selfProperties = $self->getProperties();
-    // }
 
     /**
      * @return int

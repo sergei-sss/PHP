@@ -21,17 +21,6 @@ class Router
     }
 
     /**
-     * @param Handler $handler
-     */
-    public static function addReqHandler(Handler $handler)
-    {
-        self::$handlers[self::getReqKey(
-            $handler->getRequestStr(),
-            $handler->getMethod()
-        )] = $handler;
-    }
-
-    /**
      * @param string        $reqStr
      * @param string        $method
      * @param callable|null $function
@@ -42,7 +31,9 @@ class Router
         string $method = 'GET',
         ?callable $function = null
     ): array {
-        self::addReqHandler(new Handler($reqStr, $method, $function));
+        self::$handlers[self::getReqKey($reqStr, $method)] = new Handler(
+            $reqStr, $method, $function
+        );
         return self::$handlers;
     }
 

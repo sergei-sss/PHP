@@ -8,7 +8,7 @@ class Environment
     public const APP_ENV_PRODUCTION = 'production';
 
     private string $profile = self::APP_ENV_PRODUCTION;
-    private string $dbDsn = '';
+    private string $link = '';
 
     /**
      * AppEnvironment constructor.
@@ -17,9 +17,8 @@ class Environment
     public function __construct(?array $env = null)
     {
         $this->profile = $env['APP_ENVIRONMENT'] ??
-                         getenv('APP_ENVIRONMENT') ?:
-                                 self::APP_ENV_PRODUCTION;
-        $this->dbDsn = $env['db_dsn'] ?? getenv('db_dsn') ?: '';
+                         getenv('APP_ENVIRONMENT') ?: self::APP_ENV_PRODUCTION;
+        $this->link = $env['db_link'] ?? getenv('db_link') ?: '';
     }
 
     /**
@@ -39,10 +38,10 @@ class Environment
     }
 
     /**
-     * @return string
+     * @return DbConnector
      */
-    public function getDbDsn(): string
+    public function getPdoConnector(): DbConnector
     {
-        return $this->dbDsn;
+        return new DbConnector($this->link);
     }
 }

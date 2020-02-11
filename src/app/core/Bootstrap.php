@@ -22,11 +22,19 @@ class Bootstrap
         $this->request = new Request();
         $this->response = new Response();
         try {
-            $this->pdo = new PDO($env->getDbDsn());
+            $connector = $env->getPdoConnector();
+            $this->pdo = new PDO(
+                $connector->getDsn(),
+                $connector->getUser(),
+                $connector->getPass(),
+                $connector->getParameters()
+            );
         } catch (PDOException $e) {
             // todo: исключения должны обрабатываться в другом слое
             $this->response->setBody(
-                'connection to database could not be established'
+                $env->isProduction() ?
+                    'connection to database could not be established' :
+                    $e->getMessage()
             )->flush(500);
         }
     }

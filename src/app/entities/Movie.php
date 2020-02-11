@@ -6,6 +6,7 @@ use Entity\Filter\IFilters;
 use Entity\Filter\GenresFilter;
 use Entity\Filter\MoviesFilter;
 use PDO;
+use PDOStatement;
 
 class Movie extends Entity
 {
@@ -16,6 +17,37 @@ class Movie extends Entity
      * @var Genre[]
      */
     private array $genres = [];
+
+    private PDOStatement $createStatement;
+    private PDOStatement $deleteStatement;
+    private PDOStatement $updateStatement;
+
+    private static string
+        $selectQuery = 'select id, title, duration from cinema.movies where (id = :id or :id = \'\') 
+            and (title = :title or :title = \'\') 
+            and (duration <= :duration_max or :duration_max = \'\' ) 
+            and (duration >= :duration_min or :duration_min = \'\') 
+            and (id in (select movie_id from cinema.movies_genres where genre_id = :genre_id) or :genre_id = \'\');';
+
+    /**
+     * Movie constructor.
+     * @param PDO|null $pdo
+     */
+    public function __construct(?PDO $pdo = null)
+    {
+        parent::__construct($pdo);
+        if ($pdo instanceof PDO) {
+            $this->createStatement = $pdo->prepare(
+                'insert into cinema.movies (title, duration) values (?, ?);'
+            );
+            $this->updateStatement = $pdo->prepare(
+                'update cinema.movies set title = ?, duration = ? where id = ?;'
+            );
+            $this->deleteStatement = $pdo->prepare(
+                'delete from cinema.movies where id = ?;'
+            );
+        }
+    }
 
     /**
      * @param PDO $pdo
@@ -35,13 +67,7 @@ class Movie extends Entity
      */
     public static function getByFilter(PDO $pdo, IFilters $filter): array
     {
-        $st = $pdo->prepare(
-            'select id, title, duration from movies where (id = :id or :id = \'\') 
-                                         and (title = :title or :title = \'\') 
-                                         and (duration <= :duration_max or :duration_max = \'\' ) 
-                                         and (duration >= :duration_min or :duration_min = \'\') 
-                                         and (id in (select movie_id from movies_genres where genre_id = :genre_id) or :genre_id = \'\');'
-        );
+        $st = $pdo->prepare(self::$selectQuery);
         if ($st->execute($filter->fetch())) {
             return array_map(
                 fn(array $row) => (new static($pdo))->build($row),
@@ -88,6 +114,26 @@ class Movie extends Entity
      */
     public function create(): bool
     {
+        $result = $this->createStatement->execute(
+            [$this->title, $this->duration]
+        );
+        if ($result) {
+            $this->setId($this->pdo->lastInsertId());
+            if (!empty($this->genres)) {
+                return $this->pdo->query(
+                        "insert into cinema.movies_genres (movie_id, genre_id) values "
+                        . implode(
+                            ',',
+                            array_map(
+                                fn(Genre $genre
+                                ) => "({$this->getId()},{$genre->getId()})",
+                                $this->genres
+                            )
+                        ) . ";"
+                    ) instanceof PDOStatement;
+            }
+            return true;
+        }
         return false;
     }
 
@@ -96,7 +142,9 @@ class Movie extends Entity
      */
     public function update(): bool
     {
-        return false;
+        return $this->updateStatement->execute(
+            [$this->title, $this->duration, $this->getId()]
+        );
     }
 
     /**
@@ -104,7 +152,7 @@ class Movie extends Entity
      */
     public function delete(): bool
     {
-        return false;
+        return $this->deleteStatement->execute([$this->getId()]);
     }
 
     /**

@@ -2,7 +2,10 @@
 
 namespace Controller;
 
+use Core\AppException;
+use Core\Response;
 use Entity\Filter\MoviesFilter;
+use Entity\Genre;
 use Entity\Movie;
 
 class FilmsController extends AppController
@@ -15,15 +18,37 @@ class FilmsController extends AppController
         );
         $this->app->getResponse()->setBody(
             json_encode($movies, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-        );
+        )->setContentType(Response::CONTENT_TYPE_JSON);
     }
 
-    public function getFilmById()
+    public function showPage(string $pageFile)
     {
-        $this->getApp()->getResponse()->setBody(
-            json_encode(
-                Movie::getById($this->app->getPdo(), intval($_GET['id']))
+        parent::showPage($pageFile);
+    }
+
+    /**
+     * @throws AppException
+     */
+    public function createFilm()
+    {
+        $movie = new Movie($this->app->getPdo());
+        $success = $movie->setTitle($_POST['title'])->setDuration(
+            intval($_POST['duration'])
+        )->setGenres(
+            array_map(
+                fn($id) => Genre::getById($this->app->getPdo(), intval($id)),
+                $_POST['genre_id']
             )
-        );
+        )->create();
+        if ($success) {
+            $this->app->getResponse()->setBody(
+                json_encode(
+                    $movie->fetchArray(),
+                    JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
+                )
+            )->setContentType(Response::CONTENT_TYPE_JSON);
+        } else {
+            throw new AppException('could not create film');
+        }
     }
 }

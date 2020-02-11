@@ -1,30 +1,31 @@
 <?php
 
-use Controller\FilmsController;
-use Core\Handler;
+use Core\Router;
 
-(new Handler(
+Router::addHandler(
     '/',
     'GET',
-    fn($app) => FilmsController::showPage(__DIR__ . '/app/views/index.html')
-))();
-
-(new Handler(
-    '/films', 'GET', fn($app) => (new FilmsController($app))->getFilms()
-))();
-
-(new Handler(
-    '/films', 'POST', fn($app) => (new FilmsController($app))->create()
-))();
-
-(new Handler(
-    '/films/update', 'POST', fn($app) => (new FilmsController($app))->update()
-))();
-
-(new Handler(
-    '/films', 'UPDATE', fn($app) => (new FilmsController($app))->update()
-))();
-
-(new Handler(
-    '/films', 'UPDATE', fn($app) => (new FilmsController($app))->update()
-))();
+    fn($app) => (new \Controller\FilmsController($app))->showPage(
+        __DIR__ . '/app/views/pages/index.html'
+    )
+);
+Router::addHandler(
+    '/films',
+    'GET',
+    fn($app) => (new \Controller\FilmsController($app))->getFilms()
+);
+Router::addHandler(
+    '/films',
+    'POST',
+    fn($app) => (new \Controller\FilmsController($app))->createFilm()
+);
+Router::addHandler(
+    '/genres',
+    'GET',
+    fn($app) => (new \Controller\GenresController($app))->getGenres()
+);
+Router::addHandler(
+    '/genres',
+    'POST',
+    fn($app) => (new \Controller\GenresController($app))->createGenre()
+);

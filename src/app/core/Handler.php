@@ -25,11 +25,6 @@ class Handler
         $this->requestStr = $requestStr;
     }
 
-    public function __invoke()
-    {
-        Router::addReqHandler($this);
-    }
-
     /**
      * @return string
      */

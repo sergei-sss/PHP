@@ -6,7 +6,7 @@ use Core\Bootstrap;
 
 abstract class AppController
 {
-    protected Bootstrap $app;
+    protected ?Bootstrap $app;
 
     /**
      * AppController constructor.
@@ -20,7 +20,7 @@ abstract class AppController
     /**
      * @param string $pageFile
      */
-    public static function showPage(string $pageFile)
+    public function showPage(string $pageFile)
     {
         if (file_exists($pageFile)) {
             include $pageFile;
