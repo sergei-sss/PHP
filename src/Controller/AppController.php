@@ -1,8 +1,8 @@
 <?php
 
-namespace Controller;
+namespace App\Controller;
 
-use Core\Bootstrap;
+use App\Core\Bootstrap;
 
 abstract class AppController
 {

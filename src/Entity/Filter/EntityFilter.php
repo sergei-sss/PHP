@@ -1,10 +1,9 @@
 <?php
 
-namespace Entity\Filter;
+namespace App\Entity\Filter;
 
 use ReflectionException;
 use ReflectionObject;
-use ReflectionProperty;
 
 abstract class EntityFilter implements IFilters
 {

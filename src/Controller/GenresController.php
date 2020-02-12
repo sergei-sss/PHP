@@ -1,13 +1,13 @@
 <?php
 
-namespace Controller;
+namespace App\Controller;
 
-use Core\AppException;
-use Core\Response;
-use Entity\Filter\GenresFilter;
-use Entity\Genre;
 
-class GenresController extends AppController
+use App\Core\AppException;
+use App\Entity\Filter\GenresFilter;
+use App\Entity\Genre;
+
+class GenresController extends JsonAppController
 {
     public function getGenres()
     {
@@ -17,7 +17,7 @@ class GenresController extends AppController
         );
         $this->app->getResponse()->setBody(
             json_encode($genres, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-        )->setContentType(Response::CONTENT_TYPE_JSON);
+        );
     }
 
     /**

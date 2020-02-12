@@ -1,14 +1,13 @@
 <?php
 
-namespace Controller;
+namespace App\Controller;
 
-use Core\AppException;
-use Core\Response;
-use Entity\Filter\MoviesFilter;
-use Entity\Genre;
-use Entity\Movie;
+use App\Core\AppException;
+use App\Entity\Filter\MoviesFilter;
+use App\Entity\Genre;
+use App\Entity\Movie;
 
-class FilmsController extends AppController
+class FilmsController extends JsonAppController
 {
     public function getFilms()
     {
@@ -18,7 +17,7 @@ class FilmsController extends AppController
         );
         $this->app->getResponse()->setBody(
             json_encode($movies, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-        )->setContentType(Response::CONTENT_TYPE_JSON);
+        );
     }
 
     public function showPage(string $pageFile)
@@ -46,7 +45,7 @@ class FilmsController extends AppController
                     $movie->fetchArray(),
                     JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
                 )
-            )->setContentType(Response::CONTENT_TYPE_JSON);
+            );
         } else {
             throw new AppException('could not create film');
         }

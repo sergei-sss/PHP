@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace App\Core;
 
 class Router
 {
@@ -64,7 +64,7 @@ class Router
     {
         return self::$handlers[self::getReqKey(
                 $requestStr,
-                $_SERVER['REQUEST_METHOD']
+                $_SERVER['REQUEST_METHOD'] ?? 'GET'
             )] ?? null;
     }
 

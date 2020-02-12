@@ -1,6 +1,6 @@
 <?php
 
-namespace Entity\Filter;
+namespace App\Entity\Filter;
 
 class MoviesFilter extends EntityFilter
 {

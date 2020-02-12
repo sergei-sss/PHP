@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace App\Core;
 
 class Environment
 {
@@ -16,9 +16,9 @@ class Environment
      */
     public function __construct(?array $env = null)
     {
-        $this->profile = $env['APP_ENVIRONMENT'] ??
-                         getenv('APP_ENVIRONMENT') ?: self::APP_ENV_PRODUCTION;
-        $this->link = $env['db_link'] ?? getenv('db_link') ?: '';
+        $this->profile = $env['APPLICATION_ENV'] ??
+                         $_ENV['APPLICATION_ENV'] ?: self::APP_ENV_PRODUCTION;
+        $this->link = $env['db_link'] ?? $_ENV['db_link'] ?: '';
     }
 
     /**
@@ -38,10 +38,10 @@ class Environment
     }
 
     /**
-     * @return DbConnector
+     * @return DbLink
      */
-    public function getPdoConnector(): DbConnector
+    public function getPdoConnector(): DbLink
     {
-        return new DbConnector($this->link);
+        return new DbLink($this->link);
     }
 }

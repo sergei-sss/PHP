@@ -1,8 +1,8 @@
 <?php
 
-namespace Core;
+namespace App\Core;
 
-class DbConnector
+class DbLink
 {
     private string $link = '';
     private string $dsn = '';

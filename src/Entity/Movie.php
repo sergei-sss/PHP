@@ -1,10 +1,10 @@
 <?php
 
-namespace Entity;
+namespace App\Entity;
 
-use Entity\Filter\IFilters;
-use Entity\Filter\GenresFilter;
-use Entity\Filter\MoviesFilter;
+use App\Entity\Filter\IFilters;
+use App\Entity\Filter\GenresFilter;
+use App\Entity\Filter\MoviesFilter;
 use PDO;
 use PDOStatement;
 
@@ -125,8 +125,8 @@ class Movie extends Entity
                         . implode(
                             ',',
                             array_map(
-                                fn(Genre $genre
-                                ) => "({$this->getId()},{$genre->getId()})",
+                                fn(Genre $genre) => '(' . $this->getId() . ','
+                                                    . $genre->getId() . ')',
                                 $this->genres
                             )
                         ) . ";"

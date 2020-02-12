@@ -1,8 +1,8 @@
 <?php
 
-namespace Entity;
+namespace App\Entity;
 
-use Entity\Filter\IFilters;
+use App\Entity\Filter\IFilters;
 use PDO;
 
 interface IEntities

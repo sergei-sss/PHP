@@ -1,9 +1,9 @@
 <?php
 
-namespace Entity;
+namespace App\Entity;
 
-use Entity\Filter\GenresFilter;
-use Entity\Filter\IFilters;
+use App\Entity\Filter\GenresFilter;
+use App\Entity\Filter\IFilters;
 use PDO;
 use PDOStatement;
 

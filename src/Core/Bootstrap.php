@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace App\Core;
 
 use PDO;
 use PDOException;
@@ -15,11 +15,12 @@ class Bootstrap
     /**
      * AppContainer constructor.
      * @param Environment $env
+     * @param string|null $requestStr
      */
-    public function __construct(Environment $env)
+    public function __construct(Environment $env, ?string $requestStr = null)
     {
         $this->environment = $env;
-        $this->request = new Request();
+        $this->request = new Request($requestStr);
         $this->response = new Response();
         try {
             $connector = $env->getPdoConnector();
